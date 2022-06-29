@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSort } from "../redux/slices/filterSlice";
 
+const SORT_LIST = [
+  { name: "популярности", sortProperty: "rating" },
+  { name: "цене", sortProperty: "price" },
+  { name: "алфавиту", sortProperty: "title" },
+];
+
 const Sort = ({ desc, changeOrder }) => {
   const sort = useSelector((state) => state.filter.sort);
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
-  const sortList = [
-    { name: "популярности", sortProperty: "rating" },
-    { name: "цене", sortProperty: "price" },
-    { name: "алфавиту", sortProperty: "title" },
-  ];
 
   const switchActiveSort = (item) => {
     dispatch(setSort(item));
@@ -41,7 +42,7 @@ const Sort = ({ desc, changeOrder }) => {
       {open && (
         <div className="sort__popup">
           <ul>
-            {sortList.map((item, index) => (
+            {SORT_LIST.map((item, index) => (
               <li
                 key={index}
                 onClick={() => switchActiveSort(item)}

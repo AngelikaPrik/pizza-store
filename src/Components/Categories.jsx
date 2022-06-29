@@ -1,3 +1,5 @@
+import React from 'react';
+
 const Categories = ({ value, changeCategory }) => {
   const categories = [
     "Все",

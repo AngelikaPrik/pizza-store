@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSort } from "../redux/slices/filterSlice";
 
-const SORT_LIST = [
+export const sortList = [
   { name: "популярности", sortProperty: "rating" },
   { name: "цене", sortProperty: "price" },
   { name: "алфавиту", sortProperty: "title" },
 ];
 
-const Sort = ({ desc, changeOrder }) => {
+const Sort = () => {
   const sort = useSelector((state) => state.filter.sort);
   const dispatch = useDispatch();
 
@@ -23,8 +23,8 @@ const Sort = ({ desc, changeOrder }) => {
     <div className="sort">
       <div className="sort__label">
         <svg
-          className={!desc ? "sort__rotate" : ""}
-          onClick={() => changeOrder((prev) => !prev)}
+          // className={}
+          // onClick={}
           width="10"
           height="6"
           viewBox="0 0 10 6"
@@ -42,7 +42,7 @@ const Sort = ({ desc, changeOrder }) => {
       {open && (
         <div className="sort__popup">
           <ul>
-            {SORT_LIST.map((item, index) => (
+            {sortList.map((item, index) => (
               <li
                 key={index}
                 onClick={() => switchActiveSort(item)}

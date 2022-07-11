@@ -16,7 +16,7 @@ import Sort, { sortList } from "../Components/Sort";
 import Pagination from "../Components/Pagination";
 
 const Main = () => {
-  const { categoryId, sort, currentPage } = useSelector(
+  const { categoryId, sort, currentPage, order } = useSelector(
     (state) => state.filter
   );
   const dispatch = useDispatch();
@@ -31,25 +31,26 @@ const Main = () => {
 
   const navigate = useNavigate();
 
+  const orderVal = order ? "asc" : "desc";
   const onChangePage = (num) => {
     dispatch(setCurrentPage(num));
   };
 
   const onChangeCategory = useCallback((idx) => {
     dispatch(setCategoryId(idx));
-  },[]);
+  }, []);
 
   const fetchPizzas = () => {
     async function fetchData() {
       setIsLoading(true);
       const categoryBy = categoryId > 0 ? `category=${categoryId}` : "";
       const search = searchValue ? `&search=${searchValue}` : "";
-      // const orderVal = order ? "asc" : "desc";
 
       try {
         const { data } = await axios.get(
-          `https://62af4ff3b0a980a2ef3e45c3.mockapi.io/items?page=${currentPage}&limit=8${categoryBy}&sortBy=${sort.sortProperty}&order=asc${search}`
+          `https://62af4ff3b0a980a2ef3e45c3.mockapi.io/items?page=${currentPage}&limit=8${categoryBy}&sortBy=${sort.sortProperty}&order=${orderVal}${search}`
         );
+        console.log(order);
         setItems(data);
         setIsLoading(false);
       } catch (error) {
@@ -61,17 +62,18 @@ const Main = () => {
   };
 
   useEffect(() => {
-    if(isMounted.current) {
+    if (isMounted.current) {
       const queryString = qs.stringify({
         sortProperty: sort.sortProperty,
         categoryId,
         currentPage,
+        orderVal,
       });
       navigate(`?${queryString}`);
     }
     isMounted.current = true;
-  }, [categoryId, sort.sortProperty, currentPage]);
-   
+  }, [categoryId, sort.sortProperty, currentPage, order]);
+
   useEffect(() => {
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1));
@@ -92,11 +94,11 @@ const Main = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if(!isSearch.current) {
-      fetchPizzas()
+    if (!isSearch.current) {
+      fetchPizzas();
     }
     isSearch.current = false;
-  }, [categoryId, sort.sortProperty, searchValue, currentPage]);
+  }, [categoryId, sort.sortProperty, searchValue, currentPage, order]);
 
   const pizzas = (isLoading ? [...new Array(12)] : items).map((obj, i) => (
     <PizzaBlock key={isLoading ? i : obj.id} isLoading={isLoading} {...obj} />
@@ -105,10 +107,7 @@ const Main = () => {
   return (
     <>
       <div className="content__top">
-        <Categories
-          value={categoryId}
-          changeCategory={(id) => dispatch(setCategoryId(id))}
-        />
+        <Categories value={categoryId} changeCategory={onChangeCategory} />
         <Sort />
       </div>
       <h2 className="content__title">{categoryId <= 0 ? "Все пиццы" : ""}</h2>

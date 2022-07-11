@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setSort } from "../redux/slices/filterSlice";
+import { setSort, setOrder } from "../redux/slices/filterSlice";
 
 export const sortList = [
   { name: "популярности", sortProperty: "rating" },
@@ -9,7 +9,7 @@ export const sortList = [
 ];
 
 const Sort = () => {
-  const sort = useSelector((state) => state.filter.sort);
+  const {sort, order} = useSelector((state) => state.filter);
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
@@ -23,8 +23,8 @@ const Sort = () => {
     <div className="sort">
       <div className="sort__label">
         <svg
-          // className={}
-          // onClick={}
+          className={order ? "" : "sort__rotate"}
+          onClick={() =>  dispatch(setOrder())}
           width="10"
           height="6"
           viewBox="0 0 10 6"

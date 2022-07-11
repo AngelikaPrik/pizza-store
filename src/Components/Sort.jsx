@@ -9,32 +9,36 @@ export const sortList = [
 ];
 
 const Sort = () => {
-  const {sort, order} = useSelector((state) => state.filter);
+  const { sort, order } = useSelector((state) => state.filter);
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
-  const sortListRef = useRef(null)
+  const sortRef = useRef(null);
 
   const switchActiveSort = (item) => {
     dispatch(setSort(item));
     setOpen(false);
   };
 
-  const handleClickOutside = e =>{
-    if(!sortListRef.current.contains(e.target)) {
-      setOpen(false)
+  const handleClickOutside = (e) => {
+    if (!e.path.includes(sortRef.current)) {
+      setOpen(false);
     }
-  }
+  };
+
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside, true)
+    document.body.addEventListener("click", handleClickOutside);
+    return () => {
+      document.body.removeEventListener("click", handleClickOutside);
+    }
   }, []);
 
   return (
-    <div className="sort">
+    <div className="sort" ref={sortRef}>
       <div className="sort__label">
         <svg
           className={order ? "" : "sort__rotate"}
-          onClick={() =>  dispatch(setOrder())}
+          onClick={() => dispatch(setOrder())}
           width="10"
           height="6"
           viewBox="0 0 10 6"
@@ -50,7 +54,7 @@ const Sort = () => {
         <span onClick={() => setOpen(!open)}>{sort.name}</span>
       </div>
       {open && (
-        <div className="sort__popup" ref={sortListRef}>
+        <div className="sort__popup">
           <ul>
             {sortList.map((item, index) => (
               <li

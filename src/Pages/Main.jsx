@@ -50,7 +50,7 @@ const Main = () => {
         const { data } = await axios.get(
           `https://62af4ff3b0a980a2ef3e45c3.mockapi.io/items?page=${currentPage}&limit=8${categoryBy}&sortBy=${sort.sortProperty}&order=${orderVal}${search}`
         );
-        console.log(order);
+
         setItems(data);
         setIsLoading(false);
       } catch (error) {

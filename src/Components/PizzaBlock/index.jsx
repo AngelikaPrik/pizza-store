@@ -1,9 +1,26 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux/es/exports";
+import { addItems } from "../../redux/slices/cartSlice";
+
 import Skeleton from "./Skeleton";
 
-const PizzaBlock = ({ title, price, imageUrl, sizes, types, isLoading }) => {
+const PizzaBlock = ({ id, title, price, imageUrl, sizes, types, isLoading }) => {
   const [activeType, setActiveType] = useState(0);
   const [activeSize, setActiveSize] = useState(0);
+
+  const dispatch = useDispatch()
+
+  const addToCart = () => {
+    const item = {
+      id,
+      title,
+      price,
+      imageUrl,
+      type: activeType,
+      size: activeSize
+    }
+    dispatch(addItems(item))
+  }
   return (
     <div className="pizza-block">
       {isLoading ? (
@@ -38,7 +55,7 @@ const PizzaBlock = ({ title, price, imageUrl, sizes, types, isLoading }) => {
           </div>
           <div className="pizza-block__bottom">
             <div className="pizza-block__price">от {price} ₽</div>
-            <div className="button button--outline button--add">
+            <button onClick={addToCart} className="button button--outline button--add">
               <svg
                 width="12"
                 height="12"
@@ -53,7 +70,7 @@ const PizzaBlock = ({ title, price, imageUrl, sizes, types, isLoading }) => {
               </svg>
               <span>Добавить</span>
               <i>2</i>
-            </div>
+            </button>
           </div>
         </>
       )}

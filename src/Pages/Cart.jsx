@@ -8,7 +8,10 @@ import CartEmpty from "../Components/CartEmpty";
 const Cart = () => {
   const { items, totalPrice } = useSelector((state) => state.cart);
 
+  const totalCount = items.reduce((sum, item) => item.count + sum, 0);
+
   const dispatch = useDispatch();
+  
   return (
     <>
       {items.length ? (
@@ -96,14 +99,8 @@ const Cart = () => {
             </div>
             <div className="cart__bottom">
               <div className="cart__bottom-details">
-                <span>
-                  {" "}
-                  Всего пицц: <b>3 шт.</b>{" "}
-                </span>
-                <span>
-                  {" "}
-                  Сумма заказа: <b>{totalPrice} ₽</b>
-                </span>
+                <span>Всего пицц: <b>{totalCount} шт.</b></span>
+                <span>Сумма заказа: <b>{totalPrice} ₽</b></span>
               </div>
               <div className="cart__bottom-buttons">
                 <Link

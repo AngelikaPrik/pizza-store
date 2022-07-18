@@ -24,6 +24,7 @@ const PizzaBlock = ({
   const dispatch = useDispatch();
 
   const addedCount = item ? item.count : 0;
+  
   const addToCart = () => {
     const item = {
       id,
@@ -31,7 +32,7 @@ const PizzaBlock = ({
       price,
       imageUrl,
       type: typeNames[activeType],
-      size: activeSize,
+      size: sizes[activeSize],
     };
     dispatch(addItems(item));
   };

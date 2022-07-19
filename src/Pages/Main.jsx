@@ -7,21 +7,23 @@ import {
   setCurrentPage,
   setFilters,
 } from "../redux/slices/filterSlice";
-import axios from "axios";
-import qs from "qs";
+import { setItems } from "../redux/slices/pizzaSlice";
 
 import Categories from "../Components/Categories";
 import PizzaBlock from "../Components/PizzaBlock";
 import Sort, { sortList } from "../Components/Sort";
 import Pagination from "../Components/Pagination";
 
+import axios from "axios";
+import qs from "qs";
+
 const Main = () => {
   const { categoryId, sort, currentPage, order } = useSelector(
     (state) => state.filter
   );
+  const items = useSelector((state) => state.pizza.items);
   const dispatch = useDispatch();
 
-  const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const isSearch = useRef(false);
@@ -40,25 +42,21 @@ const Main = () => {
     dispatch(setCategoryId(idx));
   }, []);
 
-  const fetchPizzas = () => {
-    async function fetchData() {
-      setIsLoading(true);
-      const categoryBy = categoryId > 0 ? `category=${categoryId}` : "";
-      const search = searchValue ? `&search=${searchValue}` : "";
+  const fetchPizzas = async () => {
+    setIsLoading(true);
+    const categoryBy = categoryId > 0 ? `category=${categoryId}` : "";
+    const search = searchValue ? `&search=${searchValue}` : "";
 
-      try {
-        const { data } = await axios.get(
-          `https://62af4ff3b0a980a2ef3e45c3.mockapi.io/items?page=${currentPage}&limit=8${categoryBy}&sortBy=${sort.sortProperty}&order=${orderVal}${search}`
-        );
-
-        setItems(data);
-        setIsLoading(false);
-      } catch (error) {
-        alert("Ошибка при запросе данных");
-        console.error(error.message);
-      }
+    try {
+      const { data } = await axios.get(
+        `https://62af4ff3b0a980a2ef3e45c3.mockapi.io/items?page=${currentPage}&limit=8${categoryBy}&sortBy=${sort.sortProperty}&order=${orderVal}${search}`
+      );
+      dispatch(setItems(data));
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
-    fetchData();
   };
 
   useEffect(() => {

@@ -13,7 +13,7 @@ const PizzaBlock = ({
   imageUrl,
   sizes,
   types,
-  isLoading,
+  status,
 }) => {
   const [activeType, setActiveType] = useState(0);
   const [activeSize, setActiveSize] = useState(0);
@@ -38,7 +38,7 @@ const PizzaBlock = ({
   };
   return (
     <div className="pizza-block">
-      {isLoading ? (
+      {status === 'loading' ? (
         <Skeleton />
       ) : (
         <>
